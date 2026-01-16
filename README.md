@@ -1,11 +1,10 @@
 # OpenAdopt
 
-**The open-source animal adoption platform that any shelter can deploy in minutes.**
+**Open source animal adoption platform for shelters and rescues**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![React 18+](https://img.shields.io/badge/react-18+-61dafb.svg)](https://reactjs.org/)
-[![Docker](https://img.shields.io/badge/docker-ready-2496ED.svg)](https://www.docker.com/)
+[![pnpm](https://img.shields.io/badge/pnpm-9.0+-orange.svg)](https://pnpm.io/)
 
 OpenAdopt is a free, self-hosted platform designed to help animal shelters and rescue organizations manage their animals and connect them with loving homes. Built with modern technologies and a focus on ease of use, OpenAdopt can be deployed by anyone—no technical expertise required.
 
@@ -62,35 +61,26 @@ OpenAdopt is a free, self-hosted platform designed to help animal shelters and r
 
 3. **Start the application**
    ```bash
-   docker-compose up -d
+   docker-compose -f docker-compose.dev.yml up -d
    ```
 
 4. **Run database migrations**
    ```bash
-   docker-compose exec web alembic upgrade head
+   docker-compose -f docker-compose.dev.yml exec api alembic upgrade head
    ```
 
 5. **Create your first admin user**
    ```bash
-   docker-compose exec web python -m app.scripts.create_admin
+   docker-compose -f docker-compose.dev.yml exec api python -m app.scripts.create_admin
    ```
 
 6. **Access the application**
-   - Public site: http://localhost:8000
-   - Admin panel: http://localhost:8000/admin
+   - Application: http://localhost:5173 (dev server)
+   - API: http://localhost:8000
+   - API Documentation: http://localhost:8000/docs
+   - Database Admin: http://localhost:8080
 
 That's it! Your shelter's adoption platform is now running.
-
----
-
-## Documentation
-
-- **[Architecture](ARCHITECTURE.md)**: Technical design and decisions
-- **[Roadmap](ROADMAP.md)**: Development phases and timeline
-- **[Installation Guide](docs/INSTALLATION.md)**: Detailed deployment instructions *(coming soon)*
-- **[Configuration](docs/CONFIGURATION.md)**: All environment variables explained *(coming soon)*
-- **[Contributing](CONTRIBUTING.md)**: How to contribute to OpenAdopt *(coming soon)*
-- **[API Documentation](http://localhost:8000/docs)**: Interactive API docs (when running)
 
 ---
 
@@ -101,19 +91,108 @@ That's it! Your shelter's adoption platform is now running.
 - **SQLAlchemy**: Powerful ORM with async support
 - **PostgreSQL**: Reliable, scalable database
 - **Alembic**: Database migration management
-- **FastAPI-Users**: Authentication and user management
+- **uv**: Fast Python package manager
 
 ### Frontend
 - **React 18**: Component-based UI library
 - **Vite**: Lightning-fast build tool
-- **React Router**: Client-side routing
-- **React Query**: Server state management
+- **pnpm**: Fast, disk space efficient package manager
 - **Tailwind CSS**: Utility-first styling
 
 ### Infrastructure
-- **Docker**: Containerization
-- **Nginx**: Reverse proxy (optional)
-- **Cloudinary/S3**: Image storage (optional)
+- **Docker**: Containerization for easy deployment
+- **PostgreSQL**: Production-ready database
+
+---
+
+## Development
+
+### Prerequisites for Local Development
+- Python 3.11+
+- Node.js 18+
+- pnpm (install with: `corepack enable`)
+- uv (install with: `curl -LsSf https://astral.sh/uv/install.sh | sh`)
+- PostgreSQL 15+
+
+### Using pnpm
+
+This project uses **pnpm** for JavaScript package management. pnpm is faster and more efficient than npm.
+
+**Installing pnpm:**
+```bash
+# Node 16.13+ has corepack built-in
+corepack enable
+corepack prepare pnpm@latest --activate
+
+# Or install globally
+npm install -g pnpm
+```
+
+**Basic pnpm commands:**
+```bash
+pnpm install          # Install dependencies
+pnpm run dev          # Run dev server
+pnpm run build        # Build for production
+pnpm run lint         # Run linter
+pnpm test             # Run tests
+```
+
+### Development with Docker (Recommended)
+
+Everything runs in containers with hot reload:
+
+```bash
+# Start all services
+docker-compose -f docker-compose.dev.yml up -d
+
+# View logs
+docker-compose -f docker-compose.dev.yml logs -f
+
+# Stop services
+docker-compose -f docker-compose.dev.yml down
+```
+
+Your changes to `api/` and `web/` are automatically reflected.
+
+### Development without Docker
+
+#### Backend
+```bash
+cd api
+
+# Install dependencies with uv
+uv sync
+
+# Run migrations
+uv run alembic upgrade head
+
+# Start backend
+uv run uvicorn app.main:app --reload
+```
+
+Backend will be at http://localhost:8000
+
+#### Frontend
+```bash
+cd web
+
+# Install dependencies
+pnpm install
+
+# Start development server
+pnpm run dev
+```
+
+Frontend will be at http://localhost:5173
+
+---
+
+## Documentation
+
+- [Architecture](ARCHITECTURE.md): Technical design and decisions
+- [Roadmap](ROADMAP.md): Development phases and timeline
+- [Contributing](CONTRIBUTING.md): How to contribute to OpenAdopt
+- [API Documentation](http://localhost:8000/docs): Interactive API docs (when running)
 
 ---
 
@@ -123,88 +202,64 @@ OpenAdopt uses a flexible plugin architecture for key services:
 
 ### Storage Backends
 Choose where to store animal photos:
-- **Local** (default): Files stored on disk
-- **S3**: Amazon S3 buckets
-- **Cloudinary**: CDN with image optimization
+- **local** (default): Files stored on disk
+- **s3**: Amazon S3 buckets
+- **cloudinary**: Cloudinary CDN with image optimization
 
 Configure via `STORAGE_BACKEND` environment variable.
 
 ### Email Backends
 Choose how to send notifications:
-- **Console** (default): Logs emails to console (development)
-- **SMTP**: Any SMTP server (Gmail, etc.)
-- **SendGrid**: SendGrid API
+- **console** (default): Logs emails to console (development)
+- **smtp**: Any SMTP server (Gmail, etc.)
+- **sendgrid**: SendGrid API
 
 Configure via `EMAIL_BACKEND` environment variable.
 
-See [Configuration Guide](docs/CONFIGURATION.md) for details.
+See [ARCHITECTURE.md](ARCHITECTURE.md) for details.
 
 ---
 
-## Deployment Options
+## Deployment
 
-OpenAdopt can be deployed anywhere Docker runs:
+### Production with Docker
 
-### Managed Platforms (Easiest)
-- **Railway**: One-click deploy, ~$10/month
-- **Render**: Simple deployment, free tier available
-- **Fly.io**: Global deployment, generous free tier
+```bash
+# Configure production environment
+cp .env.example .env
+# Edit .env with production settings
 
-### Self-Hosted
-- **DigitalOcean Droplet**: $6/month for small shelters
-- **AWS/GCP/Azure**: Use your existing cloud infrastructure
-- **Home Server**: Run on-premise with dynamic DNS
+# Start production stack
+docker-compose up -d
 
-See [Installation Guide](docs/INSTALLATION.md) for detailed instructions.
+# Run migrations
+docker-compose exec app alembic upgrade head
 
----
+# Create admin user
+docker-compose exec app python -m app.scripts.create_admin
+```
 
-## Use Cases
+### Deploy to Cloud Platforms
 
-OpenAdopt is perfect for:
+**Railway / Render / Fly.io:**
+1. Connect your repository
+2. Set environment variables
+3. Deploy!
 
-- **Animal Shelters**: Municipal and private shelters of any size
-- **Rescue Organizations**: Breed-specific or multi-species rescues
-- **Foster Networks**: Manage foster placements and adoptions
-- **Wildlife Rehabilitation**: Track and release wildlife
-- **Sanctuary Operations**: Manage residents and sponsorships
+See deployment guides in [docs/](docs/) for platform-specific instructions.
 
 ---
 
 ## Contributing
 
-We welcome contributions from everyone! Whether you're:
-- Reporting bugs
-- Suggesting features
-- Improving documentation
-- Submitting code
-- Translating to other languages
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-Please read our [Contributing Guide](CONTRIBUTING.md) to get started.
-
-### Development Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/openadopt.git
-cd openadopt
-
-# Start development environment
-docker-compose -f docker-compose.dev.yml up
-
-# Backend will be at http://localhost:8000 (with hot reload)
-# Frontend will be at http://localhost:5173 (with hot reload)
-```
-
-### Running Tests
-
-```bash
-# Backend tests
-docker-compose exec web pytest
-
-# Frontend tests
-cd frontend && npm test
-```
+Quick start for contributors:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests
+5. Submit a pull request
 
 ---
 
@@ -213,65 +268,32 @@ cd frontend && npm test
 OpenAdopt is currently in **active development** (Phase 0-1).
 
 - Architecture defined
-- Roadmap created
-- Core MVP in progress
-- Open source launch planned for Q2 2026
+- Roadmap created  
+- Foundation complete
+- Core features in progress
 
-See the [Roadmap](ROADMAP.md) for detailed timeline.
-
----
-
-## Why OpenAdopt?
-
-### vs. Commercial Solutions
-- **Free forever**: No per-animal fees, no monthly subscriptions
-- **Own your data**: Complete control over your shelter's information
-- **Customizable**: Modify it to fit your exact needs
-- **Privacy-focused**: No third-party tracking or data selling
-
-### vs. Building Your Own
-- **Production-ready**: Secure, tested, and documented
-- **Active development**: Regular updates and improvements
-- **Community support**: Help from other shelters and developers
-- **Best practices**: Architecture designed by experienced developers
-
-### vs. Generic Platforms
-- **Purpose-built**: Designed specifically for animal adoptions
-- **Workflow optimized**: Features built around shelter operations
-- **Mobile-first**: Staff can use it in the field
-- **Adopter-focused**: Beautiful public interface to find animals homes
+See [ROADMAP.md](ROADMAP.md) for detailed timeline.
 
 ---
 
-## Screenshots
+## Support & Community
 
-*Coming soon! Screenshots will be added as features are completed.*
+- **Bug Reports**: [GitHub Issues](https://github.com/yourusername/openadopt/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/openadopt/discussions)
 
 ---
 
-## Roadmap Highlights
+## License
 
-### Phase 1 (Q1 2026) - MVP
-- Complete animal management
-- Public gallery and interest forms
-- Admin authentication and dashboard
+OpenAdopt is released under the [MIT License](LICENSE).
 
-### Phase 2 (Q2 2026) - Enhancement
-- Multiple photos per animal
-- Email notifications
-- Advanced search and filtering
+---
 
-### Phase 3 (Q2 2026) - Multi-Admin
-- User management
-- Activity logging
-- Conflict prevention
+## Mission
 
-### Phase 4 (Q2 2026) - Launch
-- Complete documentation
-- One-click deployment
-- Community building
+**To make professional-quality adoption management accessible to every animal shelter, regardless of budget or technical expertise.**
 
-See full [Roadmap](ROADMAP.md) for details.
+We believe every animal deserves a great chance at finding a home, and every shelter deserves great tools to make that happen.
 
 ---
 
@@ -285,65 +307,7 @@ OpenAdopt is built with gratitude for:
 
 ---
 
-## License
-
-OpenAdopt is released under the [MIT License](LICENSE).
-
-This means you can:
-- Use it commercially
-- Modify it
-- Distribute it
-- Use it privately
-
-You must:
-- Include the license and copyright notice
-
-See [LICENSE](LICENSE) file for full details.
-
----
-
-## Support & Community
-
-- **Bug Reports**: [GitHub Issues](https://github.com/yourusername/openadopt/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/openadopt/discussions)
-- **Email**: openadopt@example.com *(coming soon)*
-- **Discord**: Join our community *(coming soon)*
-
----
-
-## Support the Project
-
-If OpenAdopt helps your shelter, consider:
-- **Starring** the repository
-- **Sharing** it with other shelters
-- **Reporting** bugs you find
-- **Contributing** code or documentation
-- **Sponsoring** development *(coming soon)*
-
-Every bit helps make OpenAdopt better for shelters everywhere!
-
----
-
-## Mission
-
-**To make professional-quality adoption management accessible to every animal shelter, regardless of budget or technical expertise.**
-
-We believe every animal deserves a great chance at finding a home, and every shelter deserves great tools to make that happen.
-
----
-
-## Made with love for animals everywhere
-
 **OpenAdopt** - *Because every animal deserves a home, and every shelter deserves great software.*
-
----
-
-### Quick Links
-
-- [Report a Bug](https://github.com/yourusername/openadopt/issues/new?template=bug_report.md)
-- [Request a Feature](https://github.com/yourusername/openadopt/issues/new?template=feature_request.md)
-- [View Changelog](CHANGELOG.md) *(coming soon)*
-- [Live Demo](https://demo.openadopt.org) *(coming soon)*
 
 ---
 
