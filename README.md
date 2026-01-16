@@ -91,6 +91,7 @@ That's it! Your shelter's adoption platform is now running.
 - **SQLAlchemy**: Powerful ORM with async support
 - **PostgreSQL**: Reliable, scalable database
 - **Alembic**: Database migration management
+- **uv**: Fast Python package manager
 
 ### Frontend
 - **React 18**: Component-based UI library
@@ -110,6 +111,7 @@ That's it! Your shelter's adoption platform is now running.
 - Python 3.11+
 - Node.js 18+
 - pnpm (install with: `corepack enable`)
+- uv (install with: `curl -LsSf https://astral.sh/uv/install.sh | sh`)
 - PostgreSQL 15+
 
 ### Using pnpm
@@ -158,18 +160,14 @@ Your changes to `api/` and `web/` are automatically reflected.
 ```bash
 cd api
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
+# Install dependencies with uv
+uv sync
 
 # Run migrations
-alembic upgrade head
+uv run alembic upgrade head
 
 # Start backend
-uvicorn app.main:app --reload
+uv run uvicorn app.main:app --reload
 ```
 
 Backend will be at http://localhost:8000

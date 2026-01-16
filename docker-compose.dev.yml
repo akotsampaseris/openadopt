@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:15-alpine
+    image: postgres:17-alpine
     environment:
       POSTGRES_USER: openadopt
       POSTGRES_PASSWORD: openadopt
@@ -37,7 +37,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   web:
     build:
@@ -50,7 +50,7 @@ services:
     volumes:
       - ./web:/app
       - /app/node_modules  # Prevent host node_modules from overwriting container
-    command: npm run dev -- --host 0.0.0.0
+    command: pnpm run dev -- --host 0.0.0.0
 
   adminer:
     image: adminer:latest
