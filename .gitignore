@@ -82,6 +82,10 @@ frontend/dist/
 frontend/build/
 backend/static/
 
+# Vite
+.vite/
+
+
 # Docker
 .docker/
 
