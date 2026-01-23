@@ -1,9 +1,12 @@
 """
 Database configuration and session management.
 """
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.ext.asyncio import (
+    create_async_engine, async_sessionmaker, AsyncSession
+    )
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from datetime import datetime
+from sqlalchemy.types import DateTime
+from datetime import datetime, timezone
 from typing import Optional, AsyncGenerator
 
 from app.core.config import settings
@@ -30,12 +33,19 @@ class Base(DeclarativeBase):
     """Base class for all database models."""
     
     id: Mapped[int] = mapped_column(primary_key=True)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now(datetime.timezone.utc))
-    updated_at: Mapped[datetime] = mapped_column(
-        default=datetime.now(datetime.timezone.utc),
-        onupdate=datetime.now(datetime.timezone.utc)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=datetime.now(timezone.utc)
     )
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(default=None)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=datetime.now(timezone.utc),
+        onupdate=datetime.now(timezone.utc)
+    )
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True),
+        default=None
+    )
 
 
 # Dependency for FastAPI routes
