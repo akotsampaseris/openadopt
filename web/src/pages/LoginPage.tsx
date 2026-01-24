@@ -34,13 +34,13 @@ export default function LoginPage() {
     }, [accessToken, navigate])
 
     return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold mb-6 text-center">OpenAdopt Admin</h1>
         
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium">Email</label>
             <input
               type="email"
               {...register('email', { required: 'Email is required' })}
@@ -52,7 +52,7 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium">Password</label>
             <input
               type="password"
               {...register('password', { required: 'Password is required' })}
@@ -64,7 +64,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
+            <div className="bg-red-200 text-red-600 p-3 rounded-md text-sm">
               {error}
             </div>
           )}
