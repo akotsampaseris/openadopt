@@ -1,20 +1,23 @@
-import './App.css'
-
-import { useHealthCheck } from './hooks/useHealthCheck'
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { useAuth } from "./context/AuthContext"
+import LoginPage from "./pages/LoginPage"
+import AdminDashboardPage from "./pages/admin/AdminDashboard"
 
 function App() {
-  const { data, isLoading, error } = useHealthCheck();
+  const { isLoading } = useAuth()
+
+  if(isLoading){
+    return <div>Loading...</div>
+  }
 
   return (
-    <>
-      <div className="bg-gray-400 p-4 rounded">
-        {isLoading && <p>Checking API...</p>}
-        {error && <p className="text-red-900">API Error</p>}
-        {data && (
-          <p className="text-green-900">API Status: {data.status}</p>
-        )}
-      </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/admin/login" element={<LoginPage />} />
+        <Route path="/" element={<Navigate to="/admin/login" />} />
+        <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

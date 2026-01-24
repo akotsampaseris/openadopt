@@ -1,69 +1,33 @@
-from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+from logging import getLogger
 
-from app.models.user import User
+from app.api.dependencies import get_current_user
 from app.core.database import get_db
-from app.core.security import (
-    verify_password, 
-    create_access_token, 
-    decode_access_token
+from app.models.user import User
+from app.schemas.auth import (
+    LoginRequest, 
+    TokenResponse, 
+    UserResponse
 )
-from app.schemas.auth import LoginRequest, TokenResponse, UserResponse
+from app.services.auth_service import AuthService
+
+logger = getLogger(__name__)
 
 router = APIRouter(prefix="/auth")
 
-security = HTTPBearer()
-
-async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: AsyncSession = Depends(get_db)
-) -> User:
-    """Get current authenticated user through sent credentials"""
-    token = credentials.credentials
-
-    payload = decode_access_token(token)
-    if not payload:
-        raise HTTPException(status_code=401, detail="Invalid token")
-    
-    user_id = payload.get("id")
-
-    stmt = select(User).where(User.id==user_id)
-    result = await db.execute(stmt)
-
-    user = result.scalar_one_or_none()
-
-    if not user:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-    return user
-
 
 @router.post("/login/", tags=["auth"], response_model=TokenResponse)
-async def login(credentials: LoginRequest, db: AsyncSession = Depends(get_db)):
-    stmt = select(User).where(User.email == credentials.email.lower())
-    result = await db.execute(stmt)
-    
-    user = result.scalar_one_or_none()
-
-    if not user or not verify_password(credentials.password, user.hashed_password):
+async def login(credentials: LoginRequest, db = Depends(get_db)):
+    try:
+        access_token = await AuthService.login_user(db, credentials.email, credentials.password)
+        logger.info(f"Attempting login with email {credentials.email}")
+    except Exception as e:
+        logger.warning(f"Login failed: {e}")
         raise HTTPException(
-            status_code=401, 
-            detail="Credentials did not match"
+            status_code=403, 
+            detail=f"Login failed: {e}"
         )
-    
-    # Update last login
-    user.last_login = datetime.now(timezone.utc)
-    await db.commit()
-    
-    data = {
-        "id": user.id,
-        "email": user.email,
-    }
-
-    access_token = create_access_token(data=data)
+    logger.info(f"Successful login with email {credentials.email}")
 
     return TokenResponse(access_token=access_token)
             

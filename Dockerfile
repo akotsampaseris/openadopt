@@ -20,7 +20,7 @@ RUN pnpm run build
 
 
 # Stage 2: Python backend
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 # Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv

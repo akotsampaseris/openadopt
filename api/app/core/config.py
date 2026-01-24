@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     # Auth
     ACCESS_TOKEN_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
+
+    # Pagination
+    DEFAULT_PAGE_SIZE: int = 50
+    MAX_PAGE_SIZE: int = 100
     
     class Config:
         env_file = "../.env"

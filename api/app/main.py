@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.auth import router as auth_router
+from app.api.admin.animals import router as admin_animals_router
 from app.core.config import settings
 
 # Create FastAPI app
@@ -24,6 +25,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(admin_animals_router)
 
 
 @app.get("/")

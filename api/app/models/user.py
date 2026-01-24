@@ -1,11 +1,12 @@
 from datetime import datetime
 from enum import StrEnum
 from sqlalchemy import Enum as SQLEnum
-from sqlalchemy.orm import Mapped, mapped_column, validates
+from sqlalchemy.orm import Mapped, mapped_column, validates, relationship
 from sqlalchemy.types import DateTime
-from typing import Optional
+from typing import List, Optional
 
 from app.core.database import Base
+from app.models.animal import Animal
 
 
 class UserRole(StrEnum):
@@ -29,6 +30,10 @@ class User(Base):
     last_login: Mapped[Optional[datetime]] = mapped_column(
         DateTime(timezone=True),default=None
     )
+    animals: Mapped[List[Animal]] = relationship(
+        "Animal",
+        back_populates="created_by"
+    ) 
 
     @validates('email')
     def normalize_email(self, key, email):
