@@ -77,6 +77,9 @@ package-lock.json
 yarn.lock
 # Keep pnpm-lock.yaml committed
 
+# pnpm-store
+.pnpm-store/
+
 # Frontend build
 frontend/dist/
 frontend/build/
