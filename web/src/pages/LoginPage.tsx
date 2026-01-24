@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form"
 import { useAuth } from "../context/AuthContext"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from 'react-router-dom'
 
 interface LoginFormData {
@@ -12,7 +12,7 @@ export default function LoginPage() {
     const { 
         register, handleSubmit, formState: { errors, isSubmitting } 
     } = useForm<LoginFormData>()
-    const { login } = useAuth()
+    const { login, accessToken } = useAuth()
     const navigate = useNavigate()
     const [error, setError] = useState<string>('')
 
@@ -25,6 +25,13 @@ export default function LoginPage() {
             setError(err.response?.data?.detail || 'Login failed')
         }
     }
+
+    useEffect(() => {
+        if (accessToken) {
+            console.log(accessToken)
+            navigate('/admin/dashboard')
+        }
+    }, [accessToken, navigate])
 
     return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
