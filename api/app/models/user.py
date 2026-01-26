@@ -3,10 +3,9 @@ from enum import StrEnum
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, validates, relationship
 from sqlalchemy.types import DateTime
-from typing import List, Optional
+from typing import Optional
 
 from app.core.database import Base
-# from app.models.animal import Animal
 
 
 class UserRole(StrEnum):
@@ -30,7 +29,7 @@ class User(Base):
     last_login: Mapped[Optional[datetime]] = mapped_column(
         DateTime(timezone=True),default=None
     )
-    animals: Mapped[List["Animal"]] = relationship( # noqa: F821
+    animals = relationship(
         "Animal",
         back_populates="created_by"
     ) 
