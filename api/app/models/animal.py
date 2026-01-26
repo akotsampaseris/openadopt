@@ -30,7 +30,7 @@ class AnimalSpecies(StrEnum):
 
 
 class AnimalSize(StrEnum):
-    SMALL = "large"
+    SMALL = "small"
     MEDIUM = "medium"
     LARGE = "large"
 
@@ -45,7 +45,7 @@ class Animal(Base):
     __tablename__ = "animals"
     
     created_by_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    created_by: Mapped["User"] = relationship(back_populates="animals") # noqa: F821
+    created_by = relationship("User", back_populates="animals")
     name: Mapped[str]
     primary_photo_url: Mapped[Optional[str]] = mapped_column(default=None)
     extra_photos_url: Mapped[Optional[str]] = mapped_column(Text, default=None)

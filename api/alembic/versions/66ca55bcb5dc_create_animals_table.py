@@ -1,8 +1,8 @@
 """create animals table
 
-Revision ID: 751469c1b056
+Revision ID: 66ca55bcb5dc
 Revises: f56de9310c32
-Create Date: 2026-01-24 11:27:33.788126
+Create Date: 2026-01-26 17:57:28.748902
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '751469c1b056'
+revision: str = '66ca55bcb5dc'
 down_revision: Union[str, None] = 'f56de9310c32'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -27,7 +27,7 @@ def upgrade() -> None:
     sa.Column('extra_photos_url', sa.Text(), nullable=True),
     sa.Column('species', sa.Enum('DOG', 'CAT', 'OTHER', name='animalspecies'), nullable=False),
     sa.Column('breed', sa.String(), nullable=True),
-    sa.Column('size', sa.Enum('SMALL', 'MEDIUM', name='animalsize'), nullable=True),
+    sa.Column('size', sa.Enum('SMALL', 'MEDIUM', 'LARGE', name='animalsize'), nullable=True),
     sa.Column('age', sa.Integer(), nullable=False),
     sa.Column('age_unit', sa.Enum('MONTHS', 'YEARS', name='animalageunit'), nullable=False),
     sa.Column('gender', sa.Enum('MALE', 'FEMALE', name='animalgender'), nullable=False),

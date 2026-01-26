@@ -29,10 +29,7 @@ class User(Base):
     last_login: Mapped[Optional[datetime]] = mapped_column(
         DateTime(timezone=True),default=None
     )
-    animals = relationship(
-        "Animal",
-        back_populates="created_by"
-    ) 
+    animals = relationship("Animal", back_populates="created_by") 
 
     @validates('email')
     def normalize_email(self, key, email):
