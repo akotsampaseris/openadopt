@@ -130,6 +130,7 @@ class AnimalUpdate(BaseModel):
 
 
 class AnimalResponse(BaseModel):
+    id: int
     name: str
     primary_photo_url: Optional[str] = None
     extra_photos_url: Optional[str] = None
