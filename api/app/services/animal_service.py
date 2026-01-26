@@ -11,7 +11,7 @@ class AnimalService:
     async def count_animals(db: AsyncSession, user: User = None):
         stmt = select(func.count()).select_from(Animal)
 
-        if user.role == UserRole.ADMIN:
+        if user and user.role == UserRole.ADMIN:
             # If the authenticated user is an admin,
             # the query should return only animals created by that user.
             # That will be used only in an admin view of the animals.
@@ -29,8 +29,7 @@ class AnimalService:
     ) -> List[Animal]:
         stmt = select(Animal)
 
-        if user.role == UserRole.ADMIN:
-            print('entered')
+        if user and user.role == UserRole.ADMIN:
             # If the authenticated user is an admin,
             # the query should return only animals created by that user.
             # That will be used only in an admin view of the animals.
