@@ -3,8 +3,8 @@
 **Open source animal adoption platform for shelters and rescues**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![pnpm](https://img.shields.io/badge/pnpm-9.0+-orange.svg)](https://pnpm.io/)
+[![Python 3.14+](https://img.shields.io/badge/python-3.14+-blue.svg)](https://www.python.org/downloads/)
+[![pnpm](https://img.shields.io/badge/pnpm-10.22+-orange.svg)](https://pnpm.io/)
 
 OpenAdopt is a free, self-hosted platform designed to help animal shelters and rescue organizations manage their animals and connect them with loving homes. Built with modern technologies and a focus on ease of use, OpenAdopt can be deployed by anyone—no technical expertise required.
 
@@ -94,7 +94,7 @@ That's it! Your shelter's adoption platform is now running.
 - **uv**: Fast Python package manager
 
 ### Frontend
-- **React 18**: Component-based UI library
+- **React 19**: Component-based UI library
 - **Vite**: Lightning-fast build tool
 - **pnpm**: Fast, disk space efficient package manager
 - **Tailwind CSS**: Utility-first styling
@@ -108,11 +108,11 @@ That's it! Your shelter's adoption platform is now running.
 ## Development
 
 ### Prerequisites for Local Development
-- Python 3.11+
-- Node.js 18+
+- Python 3.14+
+- Node.js 22+
 - pnpm (install with: `corepack enable`)
 - uv (install with: `curl -LsSf https://astral.sh/uv/install.sh | sh`)
-- PostgreSQL 15+
+- PostgreSQL 18+
 
 ### Using pnpm
 
