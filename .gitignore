@@ -46,6 +46,7 @@ htmlcov/
 *.swo
 *~
 .DS_Store
+.zed/
 
 # Environment
 .env

@@ -43,8 +43,6 @@ export function AuthProvider({ children }: { children: ReactNode}) {
                 } catch (error) {
                     localStorage.removeItem('accessToken')
                     setAccessToken(null)
-                    console.log(error)
-                    alert(error)
                 }
             }
             setIsLoading(false)
