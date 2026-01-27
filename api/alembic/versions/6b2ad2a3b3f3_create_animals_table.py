@@ -1,8 +1,8 @@
 """create animals table
 
-Revision ID: 66ca55bcb5dc
+Revision ID: 6b2ad2a3b3f3
 Revises: f56de9310c32
-Create Date: 2026-01-26 17:57:28.748902
+Create Date: 2026-01-27 12:21:47.456276
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '66ca55bcb5dc'
+revision: str = '6b2ad2a3b3f3'
 down_revision: Union[str, None] = 'f56de9310c32'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
