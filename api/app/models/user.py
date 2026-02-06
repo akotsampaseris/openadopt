@@ -18,24 +18,19 @@ class UserRole(StrEnum):
 class User(Base):
     __tablename__ = "users"
 
-    email: Mapped[str] = mapped_column(unique=True, index=True,)
+    email: Mapped[str] = mapped_column(
+        unique=True,
+        index=True,
+    )
     hashed_password: Mapped[str]
     first_name: Mapped[Optional[str]] = mapped_column(default=None)
     last_name: Mapped[Optional[str]] = mapped_column(default=None)
-    role: Mapped[UserRole] = mapped_column(
-        SQLEnum(UserRole), 
-        default=UserRole.ADMIN
-    )
+    role: Mapped[UserRole] = mapped_column(SQLEnum(UserRole), default=UserRole.ADMIN)
     is_active: Mapped[bool] = mapped_column(default=True)
-    last_login: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),default=None
-    )
-    animals: Mapped[List[Animal]] = relationship(
-        "Animal",
-        back_populates="created_by"
-    ) 
+    last_login: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), default=None)
+    animals: Mapped[List[Animal]] = relationship("Animal", back_populates="created_by")
 
-    @validates('email')
+    @validates("email")
     def normalize_email(self, key, email):
         return email.lower() if email else email
 
@@ -44,7 +39,6 @@ class User(Base):
         if self.first_name and self.last_name:
             return f"{self.first_name} {self.last_name}"
         return self.email
-    
+
     def is_super_admin(self) -> bool:
         return self.role == UserRole.SUPER_ADMIN
-

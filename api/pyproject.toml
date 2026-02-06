@@ -20,6 +20,8 @@ dependencies = [
     "pydantic[email]>=2.12",
     "pydantic-settings>=2.12",
     "python-dotenv>=1.2",
+    # File Storage
+    "aiofiles>=23.1",
 ]
 
 [project.optional-dependencies]
@@ -50,6 +52,9 @@ target-version = ['py311']
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+
+[tool.ty.environment]
+root = ["./app"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

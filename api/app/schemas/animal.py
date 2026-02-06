@@ -29,45 +29,45 @@ class AnimalCreate(BaseModel):
     medical_notes: Optional[str] = None
     behavioral_notes: Optional[str] = None
 
-    @field_validator('name')
+    @field_validator("name")
     @classmethod
     def validate_name(cls, v: str) -> str:
         if len(v.strip()) < 2:
-            raise ValueError('Name must be at least 2 characters')
+            raise ValueError("Name must be at least 2 characters")
         return v.strip()
 
-    @field_validator('age')
+    @field_validator("age")
     @classmethod
     def validate_age(cls, v: int) -> int:
         if v <= 0:
-            raise ValueError('Age must be positive')
+            raise ValueError("Age must be positive")
         if v > 50:
-            raise ValueError('Age seems unrealistic (max 50)')
+            raise ValueError("Age seems unrealistic (max 50)")
         return v
-    
-    @field_validator('primary_photo_url')
+
+    @field_validator("primary_photo_url")
     @classmethod
     def validate_photo_url(cls, v: Optional[str]) -> Optional[str]:
-        if v and not v.startswith(('http://', 'https://')):
-            raise ValueError('Photo URL must start with http:// or https://')
+        if v and not v.startswith(("http://", "https://")):
+            raise ValueError("Photo URL must start with http:// or https://")
         return v
-    
-    @field_validator('extra_photos_url')
+
+    @field_validator("extra_photos_url")
     @classmethod
     def validate_extra_photos(cls, v: Optional[str]) -> Optional[str]:
         if v:
             try:
                 photos = json.loads(v)
                 if not isinstance(photos, list):
-                    raise ValueError('Extra photos must be a JSON array')
-                
+                    raise ValueError("Extra photos must be a JSON array")
+
                 for url in photos:
                     if not isinstance(url, str):
-                        raise ValueError('All photo URLs must be strings')
-                    if not url.startswith(('http://', 'https://')):
-                        raise ValueError('All photo URLs must start with http:// or https://')
+                        raise ValueError("All photo URLs must be strings")
+                    if not url.startswith(("http://", "https://")):
+                        raise ValueError("All photo URLs must start with http:// or https://")
             except json.JSONDecodeError:
-                raise ValueError('Extra photos must be valid JSON')
+                raise ValueError("Extra photos must be valid JSON")
         return v
 
 
@@ -87,45 +87,45 @@ class AnimalUpdate(BaseModel):
     medical_notes: Optional[str]
     behavioral_notes: Optional[str]
 
-    @field_validator('name')
+    @field_validator("name")
     @classmethod
     def validate_name(cls, v: str) -> str:
         if len(v.strip()) < 2:
-            raise ValueError('Name must be at least 2 characters')
+            raise ValueError("Name must be at least 2 characters")
         return v.strip()
 
-    @field_validator('age')
+    @field_validator("age")
     @classmethod
     def validate_age(cls, v: int) -> int:
         if v <= 0:
-            raise ValueError('Age must be positive')
+            raise ValueError("Age must be positive")
         if v > 100:
-            raise ValueError('Age seems unrealistic (max 100)')
+            raise ValueError("Age seems unrealistic (max 100)")
         return v
-    
-    @field_validator('primary_photo_url')
+
+    @field_validator("primary_photo_url")
     @classmethod
     def validate_photo_url(cls, v: Optional[str]) -> Optional[str]:
-        if v and not v.startswith(('http://', 'https://')):
-            raise ValueError('Photo URL must start with http:// or https://')
+        if v and not v.startswith(("http://", "https://")):
+            raise ValueError("Photo URL must start with http:// or https://")
         return v
-    
-    @field_validator('extra_photos_url')
+
+    @field_validator("extra_photos_url")
     @classmethod
     def validate_extra_photos(cls, v: Optional[str]) -> Optional[str]:
         if v:
             try:
                 photos = json.loads(v)
                 if not isinstance(photos, list):
-                    raise ValueError('Extra photos must be a JSON array')
-                
+                    raise ValueError("Extra photos must be a JSON array")
+
                 for url in photos:
                     if not isinstance(url, str):
-                        raise ValueError('All photo URLs must be strings')
-                    if not url.startswith(('http://', 'https://')):
-                        raise ValueError('All photo URLs must start with http:// or https://')
+                        raise ValueError("All photo URLs must be strings")
+                    if not url.startswith(("http://", "https://")):
+                        raise ValueError("All photo URLs must start with http:// or https://")
             except json.JSONDecodeError:
-                raise ValueError('Extra photos must be valid JSON')
+                raise ValueError("Extra photos must be valid JSON")
         return v
 
 
@@ -156,3 +156,7 @@ class PaginatedAnimalResponse(BaseModel):
     skip: int
     limit: int
     items: List[AnimalResponse]
+
+
+class AnimalFileUrl(BaseModel):
+    url: str

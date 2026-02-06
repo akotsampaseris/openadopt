@@ -6,8 +6,8 @@ from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from app.core.database import Base
-from app.models.user import User
-from app.models.animal import Animal
+from app.models.user import User  # noqa
+from app.models.animal import Animal  # noqa
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -63,10 +63,7 @@ def run_migrations_online() -> None:
     """
 
     def do_run_migrations(connection):
-        context.configure(
-            connection=connection,
-            target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
@@ -75,7 +72,7 @@ def run_migrations_online() -> None:
         connectable = async_engine_from_config(
             config.get_section(config.config_ini_section),
             prefix="sqlalchemy.",
-            poolclass=pool.NullPool
+            poolclass=pool.NullPool,
         )
 
         async with connectable.connect() as connection:

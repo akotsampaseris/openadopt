@@ -43,32 +43,26 @@ class AnimalCurrentLocation(StrEnum):
 
 class Animal(Base):
     __tablename__ = "animals"
-    
+
     created_by_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    created_by: Mapped["User"] = relationship(back_populates="animals") # noqa: F821
+    created_by: Mapped["User"] = relationship(back_populates="animals")  # noqa
     name: Mapped[str]
     primary_photo_url: Mapped[Optional[str]] = mapped_column(default=None)
     extra_photos_url: Mapped[Optional[str]] = mapped_column(Text, default=None)
     species: Mapped[AnimalSpecies] = mapped_column(SQLEnum(AnimalSpecies))
     breed: Mapped[Optional[str]]
     size: Mapped[Optional[AnimalSize]] = mapped_column(
-        SQLEnum(AnimalSize),
-        default=None,
-        nullable=True
+        SQLEnum(AnimalSize), default=None, nullable=True
     )
     age: Mapped[int]
     age_unit: Mapped[AnimalAgeUnit] = mapped_column(SQLEnum(AnimalAgeUnit))
     gender: Mapped[AnimalGender] = mapped_column(SQLEnum(AnimalGender))
     adoption_status: Mapped[AnimalAdoptionStatus] = mapped_column(
-        SQLEnum(AnimalAdoptionStatus),
-        default=AnimalAdoptionStatus.AVAILABLE
+        SQLEnum(AnimalAdoptionStatus), default=AnimalAdoptionStatus.AVAILABLE
     )
     current_location: Mapped[Optional[AnimalCurrentLocation]] = mapped_column(
-        SQLEnum(AnimalCurrentLocation),
-        default=None,
-        nullable=True
+        SQLEnum(AnimalCurrentLocation), default=None, nullable=True
     )
     description: Mapped[Optional[str]] = mapped_column(Text, default=None)
     medical_notes: Mapped[Optional[str]] = mapped_column(Text, default=None)
     behavioral_notes: Mapped[Optional[str]] = mapped_column(Text, default=None)
-

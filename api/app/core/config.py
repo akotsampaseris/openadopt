@@ -1,6 +1,7 @@
 """
 Application configuration.
 """
+
 from pydantic_settings import BaseSettings
 
 
@@ -20,9 +21,15 @@ class Settings(BaseSettings):
     # Pagination
     DEFAULT_PAGE_SIZE: int = 50
     MAX_PAGE_SIZE: int = 100
-    
+
+    # Storage
+    STORAGE_BACKEND: str = "local"
+    STORAGE_LOCAL_PATH: str
+    STORAGE_LOCAL_URL: str
+
     class Config:
         env_file = "../.env"
         extra = "ignore"
+
 
 settings = Settings()

@@ -33,7 +33,7 @@ services:
       - EMAIL_BACKEND=console
     volumes:
       - ./api:/app
-      - api_uploads:/app/uploads
+      - ./api/uploads:/app/uploads
     depends_on:
       db:
         condition: service_healthy

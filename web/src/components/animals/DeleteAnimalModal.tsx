@@ -1,13 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-import { deleteAnimal } from '../api/animals'
+import { useAuth } from '../../context/AuthContext'
+import { deleteAnimal } from '../../api/animals'
 
 interface DeleteAnimalModalProps {
   animalId: number
   animalName: string
   onClose: () => void
 }
+
+// TODO: Replace this modal with the generic ConfirmModal
 
 export default function DeleteAnimalModal({ animalId, animalName, onClose }: DeleteAnimalModalProps) {
   const { accessToken } = useAuth()
